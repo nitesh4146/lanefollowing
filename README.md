@@ -8,9 +8,9 @@ References: https://www.svlsimulator.com/docs/
 * `cd lanefollowing/ros2_ws/src/lane_following/`
 * `git clone https://github.com/nitesh4146/bumblebee.git`
 * To build ROS2 packages:   
-`docker-compose up build_ros`
+  `docker-compose up build_ros`
 * Launch the lane following model  
-`docker-compose up drive`
+  `docker-compose up drive`
 
 
 
