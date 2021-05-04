@@ -9,7 +9,11 @@ References: https://www.svlsimulator.com/docs/
 * `git clone https://github.com/nitesh4146/bumblebee.git`
 * To build ROS2 packages go back to the root lanefollowing directory and build ros:
 `docker-compose up build_ros`
-* Launch the lane following model  
+
+* Collect Data using
+`docker-compose up collect`
+
+* Drive using trained model  
 `docker-compose up drive`
 
 
