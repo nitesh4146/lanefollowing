@@ -13,7 +13,7 @@ References: https://www.svlsimulator.com/docs/
 * Collect Data (The data will be recorded in bumblebee/data directory)
 `docker-compose up collect`
 
-* Move the data into corresponding maps direcotry before training
+* Move the data into corresponding maps directory before training
 
 * Train your model
 
