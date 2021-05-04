@@ -7,15 +7,15 @@ References: https://www.svlsimulator.com/docs/
 * `docker pull lgsvl/lanefollowing:latest`
 * `cd lanefollowing/ros2_ws/src/lane_following/`
 * `git clone https://github.com/nitesh4146/bumblebee.git`
-* To build ROS2 packages go back to the lanefollowing directory:
-`cd ../../../..`   
+* To build ROS2 packages go back to the root lanefollowing directory and build ros:
 `docker-compose up build_ros`
 * Launch the lane following model  
 `docker-compose up drive`
 
 
 
-Directory Tree:  
+Directory Tree:   
+
 lanefollowing  
 │ └── ros2_ws  
 │   └── src  
