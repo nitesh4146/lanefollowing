@@ -10,10 +10,14 @@ References: https://www.svlsimulator.com/docs/
 * To build ROS2 packages go back to the root lanefollowing directory and build ros:
 `docker-compose up build_ros`
 
-* Collect Data using
+* Collect Data (The data will be recorded in bumblebee/data directory)
 `docker-compose up collect`
 
-* Drive using trained model  
+* Move the data into corresponding maps direcotry before training
+
+* Train your model
+
+* Drive using trained model (trained model must be stored in bumblebe/model directory)  
 `docker-compose up drive`
 
 
