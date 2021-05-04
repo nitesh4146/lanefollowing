@@ -15,9 +15,9 @@ References: https://www.svlsimulator.com/docs/
 
 
 
-Directory Tree
-
-├── ros2_ws  
+Directory Tree:  
+lanefollowing  
+│ └── ros2_ws  
 │   └── src  
 │       ├── lane_following  
 │       │   ├── bumblebee  
