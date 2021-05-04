@@ -2,6 +2,10 @@
 
 References: https://www.svlsimulator.com/docs/
 
+### Prerequisites
+* Docker installed
+* Atleast 8GB of Graphic card
+
 ### Instructions:
 * `git clone --recurse-submodules https://github.com/nitesh4146/lanefollowing.git`
 * `docker pull lgsvl/lanefollowing:latest`
@@ -11,14 +15,16 @@ References: https://www.svlsimulator.com/docs/
 `docker-compose up build_ros`
 
 * Collect Data (The data will be recorded in bumblebee/data directory)
-`docker-compose up collect`
+`docker-compose up collect`  
+and run the simulator
 
 * Move the data into corresponding maps directory before training
 
 * Train your model
 
 * Drive using trained model (trained model must be stored in bumblebe/model directory)  
-`docker-compose up drive`
+`docker-compose up drive`  
+and run the simulator
 
 
 
