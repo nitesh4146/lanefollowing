@@ -36,11 +36,5 @@ Directory Tree
 │       │   ├── params  
 │       │   │   ├── collect_params.yaml  
 │       │   │   ├── drive_params.yaml  
-│       │   │   └── drive_visual_params.yaml  
-│       │   ├── __pycache__  
-│       │   │   ├── data_loader.cpython-36.pyc  
-│       │   │   └── preprocess.cpython-36.pyc  
-│       │   ├── resource  
-│       │   │   └── lane_following  
-│       │   ├── setup.cfg  
-│       │   └── setup.py  
+└───────└── └── └── drive_visual_params.yaml  
+
