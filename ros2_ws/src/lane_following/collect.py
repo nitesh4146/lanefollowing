@@ -11,9 +11,11 @@ import csv
 import cv2
 
 
-WORKING_DIR = os.path.dirname(os.path.realpath(__file__)) + "/bumblebee/data/"
+DATA_DIR = os.path.dirname(os.path.realpath(__file__)) + "/bumblebee/data/"
+# DATA_DIR = "/home/slickmind/lanefollowing/ros2_ws/src/lane_following/bumblebee/data"
+
 DATA_CSV = "training_data.csv"
-DATA_IMG = "img"
+DATA_IMG = "/img/"
 
 class Collect(Node):
     def __init__(self):
@@ -21,16 +23,17 @@ class Collect(Node):
 
         self.log = self.get_logger()
         self.log.info('Starting Collect node...')
+        self.log.info(DATA_DIR)
         
-        if not os.path.exists(WORKING_DIR + DATA_IMG):
-            os.makedirs(WORKING_DIR + DATA_IMG)
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
 
-        if not os.path.exists(WORKING_DIR + DATA_CSV):
-            os.makedirs(WORKING_DIR + DATA_CSV)
+        if not os.path.exists(DATA_DIR + DATA_IMG):
+            os.makedirs(DATA_DIR + DATA_IMG)
 
     
-        self.log.info(WORKING_DIR + DATA_IMG)
-        self.log.info(WORKING_DIR + DATA_CSV)
+        self.log.info(DATA_DIR + DATA_IMG)
+        self.log.info(DATA_DIR + DATA_CSV)
 
         center_camera_topic = self.get_parameter('center_camera_topic').value
         left_camera_topic = self.get_parameter('left_camera_topic').value
@@ -70,12 +73,12 @@ class Collect(Node):
         center_img_cv = cv2.imdecode(center_img_np_arr, cv2.IMREAD_COLOR)
         left_img_cv = cv2.imdecode(left_img_np_arr, cv2.IMREAD_COLOR)
         right_img_cv = cv2.imdecode(right_img_np_arr, cv2.IMREAD_COLOR)
-        cv2.imwrite(os.path.join(WORKING_DIR + "data" + DATA_IMG, 'center-{}.jpg'.format(msg_id)), center_img_cv)
-        cv2.imwrite(os.path.join(WORKING_DIR + "data" + DATA_IMG, 'left-{}.jpg'.format(msg_id)), left_img_cv)
-        cv2.imwrite(os.path.join(WORKING_DIR + "data" + DATA_IMG, 'right-{}.jpg'.format(msg_id)), right_img_cv)
+        cv2.imwrite(os.path.join(DATA_DIR + DATA_IMG, 'center-{}.jpg'.format(msg_id)), center_img_cv)
+        cv2.imwrite(os.path.join(DATA_DIR + DATA_IMG, 'left-{}.jpg'.format(msg_id)), left_img_cv)
+        cv2.imwrite(os.path.join(DATA_DIR + DATA_IMG, 'right-{}.jpg'.format(msg_id)), right_img_cv)
 
     def save_csv(self, steer_cmd, msg_id):
-        with open(os.path.join(WORKING_DIR + "data" + DATA_CSV, 'training_data.csv'), 'a+') as f:
+        with open(os.path.join(DATA_DIR + DATA_CSV), 'a+') as f:
             writer = csv.writer(f, delimiter=',')
             writer.writerow([msg_id, steer_cmd])
 

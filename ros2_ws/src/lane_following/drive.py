@@ -10,10 +10,11 @@ import threading
 import numpy as np
 import cv2
 import os
+import csv
+
 import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
-# from train.utils import preprocess_image
 import math
 import time
 import argparse
@@ -24,6 +25,7 @@ config.gpu_options.allow_growth = True
 sess = tf.Session(config=config)
 K.set_session(sess)
 
+DATA_DIR = os.path.dirname(os.path.realpath(__file__)) + "/bumblebee/inference/"
 
 class Drive(Node):
     def __init__(self):
@@ -31,6 +33,10 @@ class Drive(Node):
         self.log = self.get_logger()
         self.log.info('Starting Drive node...')
 
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
+
+        self.log.info("Inference in {}".format(DATA_DIR))
         self.image_lock = threading.RLock()
 
         # ROS topics
@@ -68,6 +74,9 @@ class Drive(Node):
         self.frames = 0
         self.fps = 0.
 
+        # RNN specific
+        self.img_set = []
+
         self.log.info('Up and running...')
 
     def image_callback(self, img):
@@ -80,6 +89,12 @@ class Drive(Node):
             self.steering = self.predict(self.model, self.img)
             t1 = time.time()
             self.inference_time = t1 - t0
+            # self.log.info('Inference Time: {}'.format(self.inference_time))
+
+            with open(DATA_DIR + "inference_time.csv", 'a+') as f:
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow([self.inference_time])
+
             if self.enable_visualization:
                 self.visualize(self.img, self.steering)
             self.image_lock.release()
@@ -95,6 +110,7 @@ class Drive(Node):
         message.header = header
         message.target_wheel_angular_rate = float(self.steering)
         self.control_pub.publish(message)
+        
         self.log.info('[{:.3f}] Predicted steering command: "{}"'.format(time.time(), message.target_wheel_angular_rate))
 
     def convert_timestamp(self, seconds):
@@ -117,8 +133,24 @@ class Drive(Node):
         c = np.fromstring(bytes(img.data), np.uint8)
         img = cv2.imdecode(c, cv2.IMREAD_COLOR)
         img = crop_scale(img)
+
+        ## CNN Specific Block
         img = np.expand_dims(img, axis=0)  # img = img[np.newaxis, :, :]
         steering = self.model.predict(img)
+        ## CNN Specific Block
+
+
+        # # RNN Specific Block
+        # self.img_set.append(img)
+        # steering = 0.
+
+        # if len(self.img_set) == 5:
+        #     # self.log.info('Image set ready!')
+        #     img_set = np.expand_dims(np.array(self.img_set), axis=0)  # img = img[np.newaxis, :, :]
+        #     steering = self.model.predict(img_set)[0][-1]
+        #     # self.log.info('Steering: {}'.format(steering))
+        #     self.img_set.pop(0)
+        # # RNN Specific Block
 
         return steering
 
@@ -147,7 +179,7 @@ class Drive(Node):
         cv2.putText(image, "Steering wheel angle: %.3f degrees" % steering_wheel_angle_deg, (30, 120), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
         cv2.putText(image, "Wheel angle: %.3f degrees" % wheel_angle_deg, (30, 170), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
         cv2.putText(image, "Inference time: %d ms" % (self.inference_time * 1000), (30, 220), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
-        cv2.putText(image, "Frame speed: %d fps" % (self.fps), (30, 270), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
+        # cv2.putText(image, "Frame speed: %d fps" % (self.fps), (30, 270), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2)
 
         image = cv2.resize(image, (round(image.shape[1] / 2), round(image.shape[0] / 2)), interpolation=cv2.INTER_AREA)
         cv2.imshow('LGSVL End-to-End Lane Following', image)
